@@ -1,19 +1,33 @@
 import { typography } from '@/constants/typography';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text
+} from 'react-native';
 
 type PokemonCardProps = {
   name: string;
   number: number;
+  image?: any;
   onPress: () => void;
 };
 
 export function PokemonCard({
   name,
   number,
+  image,
   onPress,
 }: PokemonCardProps) {
   return (
     <Pressable style={styles.card} onPress={onPress}>
+      <Image
+        source={{
+          uri: image ?? undefined,
+        }}
+        style={styles.image}
+      />
+
       <Text style={styles.number}>
         #{String(number).padStart(3, '0')}
       </Text>
@@ -39,7 +53,14 @@ const styles = StyleSheet.create({
 
   name: {
     marginTop: 8,
-    ...typography.h5,
+    ...typography.h4,
     color: '#333',
+  },
+
+  image: {
+    width: '100%',
+    height: 180,
+    resizeMode: 'contain',
+    borderRadius: 12,
   },
 });

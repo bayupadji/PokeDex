@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import type { PokemonStore } from '../types/pokemon.store.types';
 import {
   createJSONStorage,
   persist,
 } from 'zustand/middleware';
+import { PokemonStore } from '../types/pokemon.store.types';
 
 
 export const usePokemonStore = create<PokemonStore>()(

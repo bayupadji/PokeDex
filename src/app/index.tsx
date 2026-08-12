@@ -1,9 +1,15 @@
 import { PokemonCard } from "@/components/card";
 import { typography } from "@/constants/typography";
 import { usePokemonList } from "@/features/hooks/usePokemonList";
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreens() {
   // Initialize router for navigation
@@ -14,7 +20,10 @@ export default function HomeScreens() {
     data,
     isLoading,
     isError,
-    isPending
+    isPending,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = usePokemonList();
 
   if (isLoading || isPending) {
@@ -47,17 +56,29 @@ export default function HomeScreens() {
 
       <FlatList style={styles.list}
         data={data}
-        contentContainerStyle={{ gap: 12 }}
+        contentContainerStyle={{ gap: 12, paddingBottom: 24 }}
         renderItem={({ item }) => (
           <PokemonCard
             name={item.name}
             number={item.id}
+            image={item.sprites.front_default}
             onPress={
               () => router.push(`/pokemon/${item.id}`)
             }
           />
         )}
         keyExtractor={(item) => item.id.toString()}
+        onEndReached={() => {
+          if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isFetchingNextPage
+            ? <ActivityIndicator style={styles.footer} size="small" />
+            : null
+        }
       />
     </SafeAreaView>
   );
@@ -88,5 +109,8 @@ const styles = StyleSheet.create({
   list: {
     width: "100%",
     paddingHorizontal: 16,
+  },
+  footer: {
+    paddingVertical: 16,
   },
 });

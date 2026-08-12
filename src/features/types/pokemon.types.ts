@@ -2,6 +2,9 @@ export type PokemonItem = {
   id: number;
   name: string;
   url: string;
+  sprites: {
+    front_default: string | null;
+  };
 };
 
 export type PokemonListResponse = {
@@ -12,6 +15,11 @@ export type PokemonListResponse = {
     name: string;
     url: string;
   }[];
+};
+
+export type PokemonPage = {
+  items: PokemonItem[];
+  nextOffset: number | null;
 };
 
 export type PokemonType = {
