@@ -1,11 +1,17 @@
 import { PokemonCard } from "@/components/card";
 import { typography } from "@/constants/typography";
+import { usePokemonList } from "@/features/hooks/usePokemonList";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { usePokemonList } from "@/features/hooks/usePokemonList";
 
 export default function HomeScreens() {
-  const { data, isLoading, isError, isPending } = usePokemonList();
+  // Fetch Pokémon list using hooks
+  const {
+    data,
+    isLoading,
+    isError,
+    isPending
+  } = usePokemonList();
 
   if (isLoading || isPending) {
     return (
@@ -24,6 +30,7 @@ export default function HomeScreens() {
   }
 
   return (
+    // Main content
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>
@@ -38,9 +45,9 @@ export default function HomeScreens() {
         data={data}
         contentContainerStyle={{ gap: 12 }}
         renderItem={({ item }) => (
-          <PokemonCard 
-            name={item.name} 
-            number={item.id} 
+          <PokemonCard
+            name={item.name}
+            number={item.id}
           />
         )}
         keyExtractor={(item) => item.id.toString()}
