@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 
+// Sample Pokémon data
 const pokemonData = [
   {
     id: 1,
