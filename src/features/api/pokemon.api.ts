@@ -5,9 +5,9 @@ import type {
 } from '../types/pokemon.types';
 
 const POKE_API_URL =
-  'https://pokeapi.co/api/v2';
+  process.env.EXPO_PUBLIC_API_URL;
 
-// Fetch a list of Pokémon with pagination
+// Fetch a list of Pokémon
 export async function getPokemonList(
   limit = 20,
   offset = 0,
@@ -37,7 +37,7 @@ export async function getPokemonList(
   });
 }
 
-// Fetch Pokémon details by ID
+// Fetch Pokémon details
 export async function getPokemonDetails(
   id: number,
 ): Promise<PokemonDetail> {
