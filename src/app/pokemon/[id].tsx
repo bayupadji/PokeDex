@@ -6,7 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from 'react-native';
 import { usePokemonDetail } from '../../features/hooks/usePokemonDetail';
 

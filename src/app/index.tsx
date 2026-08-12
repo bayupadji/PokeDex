@@ -42,6 +42,19 @@ export default function HomeScreens() {
     );
   }
 
+  // Access favorites and toggleFavorite from the store
+  // const favorites = usePokemonStore(
+  //   (state) => state.favorites
+  // );
+
+  // const toggleFavorite = usePokemonStore(
+  //   (state) => state.toggleFavorite
+  // );
+
+  // const isFavorite = usePokemonStore(
+  //   (state) => state.isFavorite
+  // );
+
   return (
     // Main content
     <SafeAreaView style={styles.container}>
@@ -63,7 +76,10 @@ export default function HomeScreens() {
             number={item.id}
             image={item.sprites.front_default}
             onPress={
-              () => router.push(`/pokemon/${item.id}`)
+              () => {
+                console.log(`Navigating to Pokémon ID: ${item.id}`);
+                router.push(`/pokemon/${item.id}`)
+              }
             }
           />
         )}
@@ -99,7 +115,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   title: {
-    ...typography.h2,
+    ...typography.h1,
     color: "#333",
   },
   subtitle: {
