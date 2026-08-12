@@ -1,137 +1,178 @@
-import typography from '@/constants/typography';
+import { typography } from '@/constants/typography';
 import { useLocalSearchParams } from 'expo-router';
 import {
+  ActivityIndicator,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-
-// Sample Pokémon data
-const pokemonData = [
-  {
-    id: 1,
-    name: 'bulbasaur',
-    image:
-      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
-    types: ['grass', 'poison'],
-    height: 7,
-    weight: 69,
-  },
-  {
-    id: 4,
-    name: 'charmander',
-    image:
-      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
-    types: ['fire'],
-    height: 6,
-    weight: 85,
-  },
-  {
-    id: 25,
-    name: 'pikachu',
-    image:
-      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png',
-    types: ['electric'],
-    height: 4,
-    weight: 60,
-  },
-];
+import { usePokemonDetail } from '../../features/hooks/usePokemonDetail';
 
 export default function PokemonDetailScreen() {
-  const pokemon = pokemonData.find(
-    (pokemon) => pokemon.id === Number(useLocalSearchParams().id),
-  );
+  const { id } = useLocalSearchParams<{
+    id: string;
+  }>();
 
-  // Handle case when Pokémon is not found
-  if (!pokemon) {
+  const pokemonId = Number(id);
+
+  const {
+    data,
+    isPending,
+    isError,
+  } = usePokemonDetail(pokemonId);
+
+  // Loading state
+  if (isPending) {
     return (
-      <View style={styles.container}>
-        <Text>Pokémon not found.</Text>
+      <View style={styles.center}>
+        <ActivityIndicator />
       </View>
     );
   }
-  const { id } = pokemon;
+
+  // Error / not found state
+  if (isError || !data) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.errorText}>
+          Pokémon not found.
+        </Text>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.number}>
-        #{String(id).padStart(3, '0')}
-      </Text>
-
+    <ScrollView
+      contentContainerStyle={styles.container}
+    >
       <Image
         source={{
-          uri: pokemon.image,
+          uri:
+            data.sprites.front_default ??
+            undefined,
         }}
         style={styles.image}
       />
 
-      <Text style={styles.name}>
-        {pokemon.name}
+
+      <Text style={styles.number}>
+        #{String(data.id).padStart(3, '0')}
       </Text>
 
+      <Text style={styles.name}>
+        {data.name}
+      </Text>
+
+
       <View style={styles.types}>
-        {pokemon.types.map((type) => (
+        {data.types.map((item) => (
           <View
-            key={type}
+            key={item.slot}
             style={styles.type}
           >
             <Text style={styles.typeText}>
-              {type}
+              {item.type.name}
             </Text>
           </View>
         ))}
       </View>
 
       <View style={styles.info}>
-        <Text>
-          Height: {pokemon.height}
-        </Text>
+        <View style={styles.infoItem}>
+          <Text style={styles.infoLabel}>
+            Height
+          </Text>
 
-        <Text>
-          Weight: {pokemon.weight}
-        </Text>
+          <Text style={styles.infoValue}>
+            {data.height}
+          </Text>
+        </View>
+
+        <View style={styles.infoItem}>
+          <Text style={styles.infoLabel}>
+            Weight
+          </Text>
+
+          <Text style={styles.infoValue}>
+            {data.weight}
+          </Text>
+        </View>
       </View>
-    </View>
+
+      <Text style={styles.sectionTitle}>
+        Base Stats
+      </Text>
+
+      <View style={styles.stats}>
+        {data.stats.map((item) => (
+          <View
+            key={item.stat.name}
+            style={styles.statRow}
+          >
+            <Text style={styles.statName}>
+              {item.stat.name}
+            </Text>
+
+            <Text style={styles.statValue}>
+              {item.base_stat}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
     padding: 24,
   },
 
-  number: {
-    ...typography.subtitle2,
-    color: '#666',
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  errorText: {
+    ...typography.h5,
+    color: 'red',
   },
 
   image: {
     width: 240,
     height: 240,
-    marginTop: 16,
+    alignSelf: 'center',
+  },
+
+  number: {
+    marginTop: 8,
+    textAlign: 'center',
+    ...typography.subtitle1,
+    color: '#666',
   },
 
   name: {
-    marginTop: 16,
-    ...typography.h4,
-    fontWeight: '700',
+    marginTop: 4,
+    textAlign: 'center',
+    ...typography.h3,
     textTransform: 'capitalize',
   },
 
   types: {
     flexDirection: 'row',
+    justifyContent: 'center',
     gap: 8,
-    marginTop: 12,
+    marginTop: 16,
   },
 
   type: {
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
     borderRadius: 999,
-    backgroundColor: '#eee',
+    backgroundColor: '#E5E5E5',
   },
 
   typeText: {
@@ -139,8 +180,50 @@ const styles = StyleSheet.create({
   },
 
   info: {
-    width: '100%',
+    flexDirection: 'row',
+    gap: 16,
+    marginTop: 32,
+  },
+
+  infoItem: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: '#F5F5F5',
+  },
+
+  infoLabel: {
+    ...typography.subtitle2,
+    color: '#666',
+  },
+
+  infoValue: {
+    marginTop: 4,
+    ...typography.h5,
+  },
+
+  sectionTitle: {
+    marginTop: 32,
+    marginBottom: 12,
+    ...typography.h4,
+  },
+
+  stats: {
     gap: 8,
-    marginTop: 24,
+  },
+
+  statRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+
+  statName: {
+    textTransform: 'capitalize',
+  },
+
+  statValue: {
+    ...typography.body1,
   },
 });
