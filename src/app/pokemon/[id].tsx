@@ -1,4 +1,6 @@
+import { FavoriteButton } from '@/components/button/favoriteButton';
 import { typography } from '@/constants/typography';
+import { usePokemonDetail } from '@/features/hooks/usePokemonDetail';
 import { useLocalSearchParams } from 'expo-router';
 import {
   ActivityIndicator,
@@ -8,7 +10,6 @@ import {
   Text,
   View
 } from 'react-native';
-import { usePokemonDetail } from '../../features/hooks/usePokemonDetail';
 
 export default function PokemonDetailScreen() {
   const { id } = useLocalSearchParams<{
@@ -78,6 +79,8 @@ export default function PokemonDetailScreen() {
           </View>
         ))}
       </View>
+
+      <FavoriteButton pokemonId={pokemonId} />
 
       <View style={styles.info}>
         <View style={styles.infoItem}>
@@ -226,4 +229,19 @@ const styles = StyleSheet.create({
   statValue: {
     ...typography.body1,
   },
+
+  favoriteButton: {
+    alignSelf: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 999,
+    backgroundColor: '#222',
+  },
+
+  favoriteText: {
+    color: '#fff',
+    ...typography.body1,
+  },
+
 });

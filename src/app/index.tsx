@@ -42,18 +42,7 @@ export default function HomeScreens() {
     );
   }
 
-  // Access favorites and toggleFavorite from the store
-  // const favorites = usePokemonStore(
-  //   (state) => state.favorites
-  // );
-
-  // const toggleFavorite = usePokemonStore(
-  //   (state) => state.toggleFavorite
-  // );
-
-  // const isFavorite = usePokemonStore(
-  //   (state) => state.isFavorite
-  // );
+ 
 
   return (
     // Main content
