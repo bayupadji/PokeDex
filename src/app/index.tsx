@@ -3,8 +3,12 @@ import { typography } from "@/constants/typography";
 import { usePokemonList } from "@/features/hooks/usePokemonList";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 export default function HomeScreens() {
+  // Initialize router for navigation
+  const router = useRouter();
+
   // Fetch Pokémon list using hooks
   const {
     data,
@@ -48,6 +52,9 @@ export default function HomeScreens() {
           <PokemonCard
             name={item.name}
             number={item.id}
+            onPress={
+              () => router.push(`/pokemon/${item.id}`)
+            }
           />
         )}
         keyExtractor={(item) => item.id.toString()}

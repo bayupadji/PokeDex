@@ -1,17 +1,19 @@
 import { typography } from '@/constants/typography';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
 type PokemonCardProps = {
   name: string;
   number: number;
+  onPress: () => void;
 };
 
 export function PokemonCard({
   name,
   number,
+  onPress,
 }: PokemonCardProps) {
   return (
-    <View style={styles.card}>
+    <Pressable style={styles.card} onPress={onPress}>
       <Text style={styles.number}>
         #{String(number).padStart(3, '0')}
       </Text>
@@ -19,7 +21,7 @@ export function PokemonCard({
       <Text style={styles.name}>
         {name}
       </Text>
-    </View>
+    </Pressable>
   );
 }
 
