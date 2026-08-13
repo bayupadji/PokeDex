@@ -1,7 +1,7 @@
 import { PokemonCard } from "@/components/card";
 import { typography } from "@/constants/typography";
 import { usePokemonList } from "@/features/hooks/usePokemonList";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import {
   ActivityIndicator,
   FlatList,
@@ -42,18 +42,22 @@ export default function HomeScreens() {
     );
   }
 
- 
+
 
   return (
     // Main content
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>
-          Pokédex
-        </Text>
-        <Text style={styles.subtitle}>
-          Explore all your favorite Pokémon!
-        </Text>
+      <View style={styles.headercollumn}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Pokédex</Text>
+          <Text style={styles.subtitle}>
+            Browse and discover Pokémon
+          </Text>
+        </View>
+
+        <Link href="/favorites" style={styles.Link}>
+          <Text style={{ color: 'white' }}>Favorites</Text>
+        </Link>
       </View>
 
       <FlatList style={styles.list}
@@ -97,11 +101,16 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   header: {
-    padding: 16,
-    marginBottom: 16,
     gap: 4,
     alignItems: "flex-start",
+  },
+  headercollumn: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     width: "100%",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   title: {
     ...typography.h1,
@@ -117,5 +126,14 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingVertical: 16,
+  },
+
+  Link: {
+    alignSelf: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 999,
+    backgroundColor: '#333',
   },
 });
